@@ -1,0 +1,66 @@
+Release 1 of the Postgres REST Server
+=====================================
+Erik Lindblom
+v1, 2014-02
+:doctype: book
+
+About this specification
+------------------------
+
+This specification document is by no means of any stretch of the imagination complete. This is meant to be used a the guide and reference for when completing certain features. If something is missing from this specification, we can assume that the author was brain dead and forgot about it, and that we don't yet know what to expect from a standard way. This document will be kept up-to-date as best as one can be done with all new ideas and such coming forward.
+
+What this version will not do
+-----------------------------
+
+Because the idea of this first version is to get people talking. The only basic concepts will be covered. These concepts will be expandable and allow a platform to be built on, but some of the more advance things will be to come. 
+
+One thing that will not be included is a search API. I.e. a resource that lists all of the resources, will do just that, list all. There will be no way to filter or sort or do any of that kind of processing. This will also include not having certain fields come back, i.e. select field1,field2. All fields will be returned all of the time. At this time, OData or even a custom API is being looked at and will be discussed.
+
+Another area that will not be included are compound primary keys. We will assume that primary keys will be integer base. And that is the only thing that will be accepted when dealing with IDs.
+
+Another one will be authentication and authorization. The server will use a provided username and password, and then just use that on the backend for all querys. So if anyone has access to this server, they will be able to get the data from the server (or even create data on the server).
+
+The handling of XML will not be part of this server as well. By default, it will be JSON in and JSON out, no other accept header will be handled at this point. 
+
+The Entry Point
+---------------
+
+The entry point will be in http://tools.ietf.org/html/draft-kelly-json-hal-06[HAL] and will reference that specification for usages and formats.
+
+The entry point will be just the root and only accept the HTTP method GET.
+
+.Example Source File
+[source,javascript]
+{
+	"_links":{
+		"resource":{"href":"/topLevelResource/{id}","templated":true}
+	}
+}
+
+Top Level resource
+------------------
+
+This resource will be used to query all of the avaliable items in the database.
+
+.Accepted HTTP Methods
+[options="header"]
+|===
+|Method |Usage
+|GET    |Used to get all of the avaliable data. Will return an array of items.
+|POST   |Used to create a new resource. Will return a link back to the newly created resource
+|===
+
+
+Resource with an Id
+-------------------
+
+This endpoint will have the ability to grab a single resoruce from the database by ID.
+
+.Accepted HTTP Methods
+[options="header"]
+|===
+|Method | Usage
+|GET    | Used to retrieve the resource
+|PATCH  | Used to update fields. Only fields that are passed in as the PATCH body will be used.
+|DELETE | Used to delete the resource
+|===
